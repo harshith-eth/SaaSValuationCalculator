@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "live-server": "^1.2.1"
+    "live-server": "^1.2.2"
   },
   "dependencies": {
     "websocket-extensions": "^0.1.4"
