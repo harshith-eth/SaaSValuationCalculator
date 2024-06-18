@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SaaS Valuation Calculator</title>
+    <style>
+        /* Existing styles from index.html */
+        body {
+            font-family: 'Tahoma', 'Verdana', 'Segoe', sans-serif;
+            background-image: url('wallpaper.png');
+            background-size: cover;
+            background-repeat: no-repeat;
+            color: #000000;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden; /* Prevent body from scrolling */
+        }
+
+        .container {
+            background-color: #c3c3c3;
+            border: 2px solid #000000;
+            padding: 20px;
+            width: 400px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 2px 2px 5px #888888;
+            position: relative;
+        }
+
+        /* Custom scrollbar styles for Windows 2000 look */
+        .container::-webkit-scrollbar {
+            width: 16px;
+        }
+        
+        .container::-webkit-scrollbar-track {
+            background: #c3c3c3;
+            border: 2px solid #000000;
+        }
+        
+        .container::-webkit-scrollbar-thumb {
+            background-color: #7f7f7f;
+            border: 3px solid #000000;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+            background-color: #000080;
+            color: #ffffff;
+            padding: 10px;
+            border: 2px solid #000000;
+            box-shadow: inset 1px 1px 3px #444444;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            font-family: 'MS Sans Serif', 'Tahoma', sans-serif;
+        }
+
+        input {
+            width: 100%;
+            padding: 5px;
+            border: 2px solid #7f7f7f;
+            border-radius: 2px;
+            background-color: #e4e4e4;
+            color: #000000;
+            font-size: 14px;
+            box-sizing: border-box;
+            font-family: 'MS Sans Serif', 'Tahoma', sans-serif;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #000080;
+            color: #ffffff;
+            border: 2px solid #000000;
+            border-radius: 2px;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 1px 1px 3px #444444;
+            font-family: 'MS Sans Serif', 'Tahoma', sans-serif;
+        }
+
+        #valuation-result {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #e4e4e4;
+            color: #000000;
+            border: 2px solid #000000;
+            font-size: 14px;
+            box-shadow: inset 1px 1px 3px #888888;
+            font-family: 'MS Sans Serif', 'Tahoma', sans-serif;
+        }
+
+        .currency-selector {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            padding: 10px;
+            background-color: #000080;
+            color: #ffffff;
+            border: 2px solid #000000;
+            cursor: pointer;
+            box-shadow: 1px 1px 3px #444444;
+            font-family: 'MS Sans Serif', 'Tahoma', sans-serif;
+        }
+
+        select {
+            font-family: 'MS Sans Serif', 'Tahoma', sans-serif;
+            font-size: 14px;
+            padding: 5px;
+            border: 2px solid #7f7f7f;
+            background-color: #e4e4e4;
+            color: #000000;
+        }
+
+        .report-btn {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px;
+            background-color: #000080;
+            color: #ffffff;
+            border: 2px solid #000000;
+            cursor: pointer;
+            box-shadow: 1px 1px 3px #444444;
+            font-family: 'MS Sans Serif', 'Tahoma', sans-serif;
+        }
+
+        .top-left-logo {
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            font-family: 'MS Sans Serif', 'Tahoma', sans-serif;
+            font-weight: bold;
+            font-size: 18px;
+            color: #ffffff;
+            background-color: #000080;
+            padding: 5px 10px;
+            border: 2px solid #000000;
+            box-shadow: 1px 1px 3px #444444;
+        }
+
+        /* Popup styles from popup.html */
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #ffffff;
+            border: 2px solid #000000;
+            padding: 20px;
+            box-shadow: 2px 2px 5px #888888;
+            z-index: 1000;
+            width: 300px;
+        }
+
+        .popup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #000000;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+        }
+
+        .popup-header h2 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .window-buttons {
+            display: flex;
+        }
+
+        .window-buttons button {
+            width: 10px; /* Smaller width */
+            height: 10px; /* Smaller height */
+            background-color: #000080; /* Blue color */
+            border: 1px solid #000000;
+            cursor: pointer;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .window-buttons button:hover {
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        .window-buttons button span {
+            font-size: 16px; /* Larger X to fit the box */
+            line-height: 16px; /* Ensures proper alignment */
+        }
+
+        .popup button {
+            background-color: #000080;
+            color: #ffffff;
+            border: 2px solid #000000;
+            padding: 6px;
+            cursor: pointer;
+            box-shadow: 1px 1px 3px #444444;
+            width: 100%;
+        }
+
+        .popup button:hover {
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-left-logo">SaaSValuationCalculator.net</div>
+    <div class="container">
+        <header>
+            <h1>SaaS Valuation Calculator</h1>
+        </header>
+        <main>
+            <form id="valuation-form">
+                <div class="form-group">
+                    <label for="mrr">Monthly Recurring Revenue (MRR):</label>
+                    <input type="number" id="mrr" name="mrr" required>
+                </div>
+                <div class="form-group">
+                    <label for="arr">Annual Recurring Revenue (ARR):</label>
+                    <input type="number" id="arr" name="arr" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="ttm-revenue">Trailing 12 Months Revenue (TTM Revenue):</label>
+                    <input type="number" id="ttm-revenue" name="ttm-revenue" required>
+                </div>
+                <div class="form-group">
+                    <label for="ttm-profit">Trailing 12 Months Profit (TTM Profit):</label>
+                    <input type="number" id="ttm-profit" name="ttm-profit" required>
+                </div>
+                <div class="form-group">
+                    <label for="last-month-revenue">Last Month's Revenue:</label>
+                    <input type="number" id="last-month-revenue" name="last-month-revenue" required>
+                </div>
+                <div class="form-group">
+                    <label for="last-month-profit">Last Month's Profit:</label>
+                    <input type="number" id="last-month-profit" name="last-month-profit" required>
+                </div>
+                <div class="form-group">
+                    <label for="customers">Number of Customers:</label>
+                    <input type="number" id="customers" name="customers" required>
+                </div>
+                <div class="form-group">
+                    <label for="annual-growth-rate">Annual Growth Rate (%):</label>
+                    <input type="number" id="annual-growth-rate" name="annual-growth-rate" required>
+                </div>
+                <div class="form-group">
+                    <label for="web-traffic">Web Traffic:</label>
+                    <input type="number" id="web-traffic" name="web-traffic" required>
+                </div>
+                <div class="form-group">
+                    <label for="churn">Churn Rate (%):</label>
+                    <input type="number" id="churn" name="churn" required>
+                </div>
+                <div class="form-group">
+                    <label for="cac">Customer Acquisition Cost (CAC):</label>
+                    <input type="number" id="cac" name="cac" required>
+                </div>
+                <div class="form-group">
+                    <label for="ltv">Customer Lifetime Value (LTV):</label>
+                    <input type="number" id="ltv" name="ltv" required>
+                </div>
+                <button type="submit">Calculate Valuation</button>
+            </form>
+            <div id="valuation-result">
+                <h2>Valuation Result:</h2>
+                <p id="result"></p>
+            </div>
+        </main>
+    </div>
+    <div class="currency-selector">
+        <label for="currency">Currency:</label>
+        <select id="currency">
+            <option value="USD" selected>USD</option>
+            <option value="EUR">EUR</option>
+            <option value="GBP">GBP</option>
+            <option value="INR">INR</option>
+            <option value="JPY">JPY</option>
+            <option value="AUD">AUD</option>
+            <option value="CAD">CAD</option>
+            <option value="CHF">CHF</option>
+            <option value="CNY">CNY</option>
+            <option value="HKD">HKD</option>
+            <option value="NZD">NZD</option>
+            <option value="SGD">SGD</option>
+            <option value="ZAR">ZAR</option>
+            <option value="BRL">BRL</option>
+            <option value="MXN">MXN</option>
+            <option value="SEK">SEK</option>
+            <option value="NOK">NOK</option>
+            <option value="DKK">DKK</option>
+            <option value="RUB">RUB</option>
+            <option value="TRY">TRY</option>
+            <option value="KRW">KRW</option>
+            <option value="MYR">MYR</option>
+            <option value="IDR">IDR</option>
+            <option value="PHP">PHP</option>
+            <option value="THB">THB</option>
+            <option value="PLN">PLN</option>
+            <option value="HUF">HUF">HUF</option>
+            <option value="CZK">CZK</option>
+            <option value="ILS">ILS</option>
+            <option value="CLP">CLP</option>
+            <option value="COP">COP</option>
+            <option value="PEN">PEN</option>
+            <option value="ARS">ARS</option>
+            <option value="EGP">EGP</option>
+            <option value="SAR">SAR</option>
+            <option value="AED">AED</option>
+            <option value="QAR">QAR</option>
+            <option value="KWD">KWD</option>
+            <option value="BHD">BHD</option>
+            <option value="OMR">OMR</option>
+            <option value="MAD">MAD</option>
+            <option value="PKR">PKR</option>
+            <option value="BDT">BDT</option>
+            <option value="VND">VND</option>
+            <option value="NGN">NGN</option>
+            <option value="GHS">GHS</option>
+            <option value="KES">KES</option>
+            <option value="UGX">UGX</option>
+            <option value="TWD">TWD</option>
+            <option value="SGD">SGD</option>
+            <option value="NPR">NPR</option>
+            <!-- Add more currencies as needed -->
+        </select>
+    </div>
+    <div class="report-btn" id="report-btn">
+        Get Detailed Report
+    </div>
+
+    <!-- Popup elements from popup.html -->
+    <div class="overlay" id="overlay"></div>
+    <div class="popup" id="popup">
+        <div class="popup-header">
+            <h2>Get Detailed Report</h2>
+            <div class="window-buttons">
+                <button onclick="closePopup()"><span>×</span></button>
+            </div>
+        </div>
+        <p>Get a detailed report on your valuation and how to increase your valuation customized to your startup.</p>
+        <button onclick="closePopup()">Get Report</button>
+    </div>
+
+    <script src="index.js"></script>
+</body>
+</html>
