@@ -1,3 +1,22 @@
+document.addEventListener('DOMContentLoaded', function () {
+    // Retrieve saved data from localStorage
+    const savedData = JSON.parse(localStorage.getItem('valuationData')) || {};
+
+    // Populate form fields with saved data
+    Object.keys(savedData).forEach(key => {
+        const field = document.getElementById(key);
+        if (field) field.value = savedData[key];
+    });
+
+    // Save form data to localStorage on input
+    document.querySelectorAll('input').forEach(input => {
+        input.addEventListener('input', function () {
+            savedData[input.id] = input.value;
+            localStorage.setItem('valuationData', JSON.stringify(savedData));
+        });
+    });
+});
+
 document.getElementById('valuation-form').addEventListener('submit', function (e) {
     e.preventDefault();
 
@@ -66,21 +85,3 @@ window.onload = function() {
 };
 
 // Open popup on button click after 1 second
-document.querySelector('button[type="submit"]').addEventListener('click', function() {
-    setTimeout(openPopup, 1000);
-});
-
-// Open popup 30 seconds after calculation result is displayed
-document.getElementById('valuation-form').addEventListener('submit', function() {
-    setTimeout(function() {
-        if (document.getElementById('result').innerText.trim() !== '') {
-            openPopup();
-        }
-    }, 30000);
-});
-
-// Add event listener for the report button
-document.getElementById('report-btn').addEventListener('click', function () {
-    // Code to handle report request, redirect to new page, or open a modal
-    alert('Get a detailed report functionality coming soon!');
-});

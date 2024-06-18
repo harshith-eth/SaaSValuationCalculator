@@ -1,14 +1,20 @@
 {
   "name": "saasvaluationcalculator",
   "version": "1.0.0",
+  "description": "A calculator for SaaS valuation",
   "main": "index.js",
   "scripts": {
-    "start": "live-server --port=8080",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "concurrently \"live-server --port=8080\" \"npm run other-command\"",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "other-command": "echo \"Running another command\""
   },
-  "author": "",
+  "author": "Harshith Vaddiparthy",
   "license": "ISC",
   "devDependencies": {
+    "concurrently": "^7.0.0",
     "live-server": "^1.2.2"
   },
- 
+  "dependencies": {
+    "websocket-extensions": "^0.1.4"
+  }
+}
