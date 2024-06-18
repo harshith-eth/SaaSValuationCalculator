@@ -4,10 +4,8 @@
   "description": "A calculator for SaaS valuation",
   "main": "index.js",
   "scripts": {
-    "start": "concurrently \"live-server --port=8080 --ignore=node_modules\" \"npm run other-command\"",
-    "build": "npm run start",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "other-command": "echo \"Running another command\""
+    "start": "live-server --port=8080 --ignore=node_modules",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Harshith Vaddiparthy",
   "license": "ISC",
