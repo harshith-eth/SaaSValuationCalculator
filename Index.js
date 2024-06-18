@@ -15,11 +15,8 @@ document.getElementById('valuation-form').addEventListener('submit', function (e
     const cac = parseFloat(document.getElementById('cac').value);
     const ltv = parseFloat(document.getElementById('ltv').value);
 
-    // Improved valuation formula based on SaaS metrics
-    const valuation = (arr * 3) + (ttmRevenue * 2) + (ttmProfit * 2) - cac + (ltv * 1.5) + 
-                      (lastMonthRevenue * 1.5) + (lastMonthProfit * 1.5) + 
-                      (customers * 1.2) + (annualGrowthRate * 1000) + 
-                      (webTraffic / 1000);
+    // Proprietary SaaS valuation algorithm
+    const valuation = (arr * 2) + (arr * (1 + 2.5 * annualGrowthRate));
 
     const currency = document.getElementById('currency').value;
     document.getElementById('result').innerText = `Your SaaS valuation is ${currency} ${valuation.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`;
